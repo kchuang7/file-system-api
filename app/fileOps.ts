@@ -1,16 +1,32 @@
 import * as fs from 'node:fs/promises'
+import { modeToOctal } from './helper.js'
 // types
 import { Dirent, StatsBase } from 'node:fs'
+import FilesItemType from '../types/FilesItemType'
 import FilesType from '../types/FilesType'
 
-export async function getFiles (relativePath: string): Promise<FilesType> {
-  const files = await fs.readdir(`/host${relativePath}`, { withFileTypes: true })
-  // const stats = await fs.stat('/host/Documents/hello')
+export async function queryFilePath (relativePath: string): Promise<FilesType> {
+  const targetPath: string = `/host${relativePath}`
+  const targetStat = await fs.stat(targetPath)
 
-  return files.map((f: Dirent) => ({
-    name: f.name,
-    owner: 1,
-    size: 2,
-    permissions: 777
-  }))
-}
+  if (targetStat.isDirectory()) {
+    // fetch directory contents
+    const files = await fs.readdir(targetPath, { withFileTypes: true })
+    // construct array of fs.stat promises
+    const stats = await Promise.all(files.map(async (f: Dirent) =>
+      await fs.stat(`${targetPath}/${f.name}`))
+    )
+
+    return stats.map((s: StatsBase<number>, i: number): FilesItemType => ({
+      name: files[i].name,
+      owner: s.uid,
+      size: s.size,
+      permissions: modeToOctal(s.mode)
+    }))
+  } else if (targetStat.isFile()) {
+    console.log('i\'m a file')
+    return []
+  } else {
+    return []
+  }
+} // end queryFilePath

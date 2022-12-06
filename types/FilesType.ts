@@ -1,8 +1,5 @@
-type FilesType = Array<{
-  name: string
-  owner: number
-  size: number
-  permissions: number
-}>
+import FileType from './FilesItemType'
+
+type FilesType = FileType[]
 
 export default FilesType

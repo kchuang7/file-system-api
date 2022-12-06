@@ -1,5 +1,5 @@
 import express, { Express, Request, Response } from 'express'
-import { getFiles } from './fileOps.js'
+import { queryFilePath } from './fileOps.js'
 // types
 import FilesType from '../types/FilesType.js'
 
@@ -12,7 +12,7 @@ const port: number = 8080
 app.use(express.static('public'))
 
 app.get('/*', (req: Request, res: Response): void => {
-  getFiles(req.url)
+  queryFilePath(req.url)
     .then((f: FilesType) => {
       res.json(f)
     })
