@@ -1,0 +1,23 @@
+version: '3.4'
+
+services:
+  node:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: node
+    restart: always
+    environment:
+      - ROOT_DIR=$ROOT_DIR
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/usr/src/app
+      - $ROOT_DIR:/host
+    networks:
+      - app-network
+    command: "npm start"
+      
+networks:
+    app-network:
+      driver: bridge
