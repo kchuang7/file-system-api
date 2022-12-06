@@ -17,12 +17,16 @@ export async function queryFilePath (relativePath: string): Promise<FilesType> {
       await fs.stat(`${targetPath}/${f.name}`))
     )
 
-    return stats.map((s: StatsBase<number>, i: number): FilesItemType => ({
-      name: files[i].name,
-      owner: s.uid,
-      size: s.size,
-      permissions: modeToOctal(s.mode)
-    }))
+    return stats.map((s: StatsBase<number>, i: number): FilesItemType => {
+      const isFile = files[i].isFile()
+      return {
+        name: files[i].name,
+        owner: isFile ? s.uid : undefined,
+        size: isFile ? s.size : undefined,
+        permissions: isFile ? modeToOctal(s.mode) : undefined,
+        isFile
+      }
+    })
   } else if (targetStat.isFile()) {
     console.log('i\'m a file')
     return []

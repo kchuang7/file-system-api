@@ -1,5 +1,5 @@
-import FileType from './FilesItemType'
+import FilesItemType from './FilesItemType'
 
-type FilesType = FileType[]
+type FilesType = FilesItemType[]
 
 export default FilesType
