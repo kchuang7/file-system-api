@@ -24,6 +24,7 @@
     "esm": true
   },
   "include": [
-    "app"
+    "app",
+    "types"
   ]
 }
