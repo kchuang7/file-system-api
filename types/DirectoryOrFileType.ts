@@ -1,6 +1,6 @@
 import DirectoryType from './DirectoryType'
 import FileContentType from './FileContentType'
 
-type GetFilePathReturnType = DirectoryType | FileContentType | null
+type DirectoryOrFileType = DirectoryType | FileContentType | null
 
-export default GetFilePathReturnType
+export default DirectoryOrFileType

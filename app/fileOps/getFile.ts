@@ -1,4 +1,4 @@
-import * as fs from 'node:fs/promises'
+import { readdir, readFile, stat } from 'node:fs/promises'
 import path from 'path'
 import { getNameFromPath, modeToOctal } from '../helper.js'
 // types
@@ -15,10 +15,10 @@ import DirectoryItemType from '../../types/DirectoryItemType'
  */
 async function getDirectory (targetPath: string): Promise<DirectoryType> {
   // fetch directory contents
-  const files = await fs.readdir(targetPath, { withFileTypes: true })
+  const files = await readdir(targetPath, { withFileTypes: true })
   // construct array of fs.stat promises
   const stats = await Promise.all(files.map(async (f: Dirent) =>
-    await fs.stat(`${targetPath}/${f.name}`))
+    await stat(`${targetPath}/${f.name}`))
   )
 
   return {
@@ -43,7 +43,7 @@ async function getDirectory (targetPath: string): Promise<DirectoryType> {
  * @return {Promise<FileContentType>} Target file contents and stats.
  */
 async function getFile (targetPath: string, targetStat: StatsBase<number>): Promise<FileContentType> {
-  const contents = await fs.readFile(targetPath, { encoding: 'utf8' })
+  const contents = await readFile(targetPath, { encoding: 'utf8' })
 
   return {
     contents,
@@ -63,7 +63,7 @@ async function getFile (targetPath: string, targetStat: StatsBase<number>): Prom
 export async function getFilePath (relativePath: string): Promise<DirectoryOrFileType> {
   try {
     const targetPath: string = path.join('/host', relativePath)
-    const targetStat = await fs.stat(targetPath)
+    const targetStat = await stat(targetPath)
 
     if (targetStat.isDirectory()) {
       return await getDirectory(targetPath)

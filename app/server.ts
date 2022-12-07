@@ -1,4 +1,5 @@
 import express, { Express, Request, Response } from 'express'
+import bodyParser from 'body-parser'
 import { getFilePath } from './fileOps/getFile.js'
 import { postFilePath } from './fileOps/postFile.js'
 import { getBaseUrl } from './helper.js'
@@ -9,6 +10,7 @@ const app: Express = express()
 const port: number = 8080
 
 app.use(express.static('public'))
+app.use(bodyParser.urlencoded({ extended: false }))
 
 function handleError (err: Error, res: Response): void {
   console.error(err)
@@ -30,7 +32,7 @@ app.route('/*')
     const directoryOrFileName = typeof req.query.directoryOrFileName === 'string'
       ? req.query.directoryOrFileName
       : ''
-    postFilePath(getBaseUrl(req.url), directoryOrFileName, isFile)
+    postFilePath(getBaseUrl(req.url), directoryOrFileName, isFile, req.body.contents)
       .then((f: DirectoryOrFileType): void => {
         res.json(f)
       })
