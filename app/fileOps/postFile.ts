@@ -1,8 +1,17 @@
-import { mkdir, writeFile } from 'node:fs/promises'
+import { mkdir } from 'node:fs/promises'
 import path from 'path'
+import { putFilePath } from './putFile.js'
 // types
 import DirectoryOrFileType from '../../types/DirectoryOrFileType'
 
+/**
+ * Create directory or file.
+ * @param {string} relativePath Path of target directory or file.
+ * @param {string} directoryOrFileName Desired name of directory of file to be created.
+ * @param {boolean} isFile Whether or not object to be created is a file or directory.
+ * @param {string} contents Escaped string contents to populate file.
+ * @return {Promise<DirectoryOrFileType>} Created directory or file.
+ */
 export async function postFilePath (
   relativePath: string,
   directoryOrFileName: string,
@@ -10,7 +19,6 @@ export async function postFilePath (
   contents: string
 ): Promise<DirectoryOrFileType> {
   const targetPath: string = `/host${relativePath}`
-  const unescapedContents = contents.replace(/\\n/g, '\n')
 
   try {
     if (!isFile) {
@@ -21,13 +29,7 @@ export async function postFilePath (
         items: []
       }
     } else {
-      await writeFile(path.join(targetPath, directoryOrFileName), unescapedContents, 'utf8')
-
-      return {
-        name: directoryOrFileName,
-        contents: unescapedContents,
-        isFile: true
-      }
+      return await putFilePath(relativePath, directoryOrFileName, contents)
     }
   } catch (err) {
     console.error(err)

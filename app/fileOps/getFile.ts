@@ -58,7 +58,7 @@ async function getFile (targetPath: string, targetStat: StatsBase<number>): Prom
 /**
  * Determine if target path maps to directory or file and returns respective data.
  * @param {string} relativePath Path of target directory or file.
- * @return {Promise<GetFilePathReturnType>} Target directory or file contents and stats.
+ * @return {Promise<DirectoryOrFileType>} Target directory or file contents and stats.
  */
 export async function getFilePath (relativePath: string): Promise<DirectoryOrFileType> {
   try {
