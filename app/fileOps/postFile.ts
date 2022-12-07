@@ -18,7 +18,7 @@ export async function postFilePath (
   isFile: boolean,
   contents: string
 ): Promise<DirectoryOrFileType> {
-  const targetPath: string = `/host${relativePath}`
+  const targetPath: string = path.join('/host', relativePath)
 
   try {
     if (!isFile) {
