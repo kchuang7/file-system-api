@@ -43,10 +43,7 @@ app.route('/*')
       .catch((err: Error): void => handleError(err, res))
   }) // end POST
   .put((req: Request, res: Response): void => {
-    const directoryOrFileName = typeof req.query.directoryOrFileName === 'string'
-      ? req.query.directoryOrFileName
-      : ''
-    putFilePath(getBaseUrl(req.url), directoryOrFileName, req.body.contents)
+    putFilePath(getBaseUrl(req.url), req.body.contents)
       .then((f: FileContentType | null): void => {
         res.json(f)
       })

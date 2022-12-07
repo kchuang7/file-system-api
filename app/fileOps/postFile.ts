@@ -29,7 +29,7 @@ export async function postFilePath (
         items: []
       }
     } else {
-      return await putFilePath(relativePath, directoryOrFileName, contents)
+      return await putFilePath(path.join(relativePath, directoryOrFileName), contents)
     }
   } catch (err) {
     console.error(err)
