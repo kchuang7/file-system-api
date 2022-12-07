@@ -6,6 +6,14 @@ The goal of this file system API is to provide a simple Dockerized way to browse
 
 ## Build and Run
 
-Spin up the Docker application by providing a root directory:
+Start the Docker application by providing a root directory:
 
 <code>./bin/start.sh /path/to/root/directory</code>
+
+Run unit tests:
+
+<code>npm test</code>
+
+Stop the Docker application:
+
+<code>./bin/stop.sh</code>

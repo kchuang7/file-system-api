@@ -7,4 +7,4 @@ if test ! -f "$FILE"; then
   npm i
 fi
 
-ROOT_DIR=$1 docker-compose up
+ROOT_DIR=$1 docker-compose up -d
