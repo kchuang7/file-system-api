@@ -1,4 +1,5 @@
 import * as fs from 'node:fs/promises'
+import path from 'path'
 import { getNameFromPath, modeToOctal } from '../helper.js'
 // types
 import { Dirent, StatsBase } from 'node:fs'
@@ -60,14 +61,18 @@ async function getFile (targetPath: string, targetStat: StatsBase<number>): Prom
  * @return {Promise<GetFilePathReturnType>} Target directory or file contents and stats.
  */
 export async function getFilePath (relativePath: string): Promise<DirectoryOrFileType> {
-  const targetPath: string = `/host${relativePath}`
-  const targetStat = await fs.stat(targetPath)
+  try {
+    const targetPath: string = path.join('/host', relativePath)
+    const targetStat = await fs.stat(targetPath)
 
-  if (targetStat.isDirectory()) {
-    return await getDirectory(targetPath)
-  } else if (targetStat.isFile()) {
-    return await getFile(targetPath, targetStat)
-  } else {
-    return null
+    if (targetStat.isDirectory()) {
+      return await getDirectory(targetPath)
+    } else if (targetStat.isFile()) {
+      return await getFile(targetPath, targetStat)
+    }
+  } catch (err) {
+    console.error(err)
   }
+
+  return null
 } // end getFilePath

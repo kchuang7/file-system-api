@@ -1,4 +1,13 @@
 /**
+ * Remove query string from request url.
+ * @param {string} url Full request url including possible query string.
+ * @return {string} Request url devoid of query string.
+ */
+export function getBaseUrl (url: string): string {
+  return String(url.split('?').shift())
+} // end getBaseUrl
+
+/**
  * Get directory or file name from path.
  * @param {string} path Full relative path of directory of file.
  * @return {string} Directory or file name.
