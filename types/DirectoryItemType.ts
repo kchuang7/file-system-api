@@ -1,4 +1,4 @@
-interface FilesItemType {
+interface DirectoryItemType {
   name: string
   owner?: number
   size?: number
@@ -6,4 +6,4 @@ interface FilesItemType {
   isFile: boolean
 }
 
-export default FilesItemType
+export default DirectoryItemType

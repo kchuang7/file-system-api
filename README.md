@@ -7,4 +7,5 @@ The goal of this file system API is to provide a simple Dockerized way to browse
 ## Build and Run
 
 Spin up the Docker application by providing a root directory:
+
 <code>./bin/start.sh /path/to/root/directory</code>

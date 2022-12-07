@@ -1,18 +1,18 @@
 import * as fs from 'node:fs/promises'
-import { modeToOctal } from './helper.js'
+import { getNameFromPath, modeToOctal } from '../helper.js'
 // types
 import { Dirent, StatsBase } from 'node:fs'
-import FilesType from '../types/FilesType.js'
-import FileContentType from '../types/FileContentType.js'
-import QueryFilePathReturnType from '../types/QueryFilePathReturnType.js'
-import FilesItemType from '../types/FilesItemType'
+import DirectoryType from '../../types/DirectoryType'
+import DirectoryOrFileType from '../../types/DirectoryOrFileType'
+import FileContentType from '../../types/FileContentType'
+import DirectoryItemType from '../../types/DirectoryItemType'
 
 /**
  * Fetch contents of target directory.
  * @param {string} targetPath Path of target directory.
- * @return {Promise<FilesType>} List of directories and files inside target directory.
+ * @return {Promise<DirectoryType>} List of directories and files inside target directory.
  */
-async function getDirectory (targetPath: string): Promise<FilesType> {
+async function getDirectory (targetPath: string): Promise<DirectoryType> {
   // fetch directory contents
   const files = await fs.readdir(targetPath, { withFileTypes: true })
   // construct array of fs.stat promises
@@ -20,16 +20,19 @@ async function getDirectory (targetPath: string): Promise<FilesType> {
     await fs.stat(`${targetPath}/${f.name}`))
   )
 
-  return stats.map((s: StatsBase<number>, i: number): FilesItemType => {
-    const isFile = files[i].isFile()
-    return {
-      name: files[i].name,
-      owner: isFile ? s.uid : undefined,
-      size: isFile ? s.size : undefined,
-      permissions: isFile ? modeToOctal(s.mode) : undefined,
-      isFile
-    }
-  })
+  return {
+    name: getNameFromPath(targetPath),
+    items: stats.map((s: StatsBase<number>, i: number): DirectoryItemType => {
+      const isFile = files[i].isFile()
+      return {
+        name: files[i].name,
+        owner: isFile ? s.uid : undefined,
+        size: isFile ? s.size : undefined,
+        permissions: isFile ? modeToOctal(s.mode) : undefined,
+        isFile
+      }
+    })
+  }
 } // end getDirectory
 
 /**
@@ -43,7 +46,7 @@ async function getFile (targetPath: string, targetStat: StatsBase<number>): Prom
 
   return {
     contents,
-    name: targetPath.substring(targetPath.lastIndexOf('/') + 1),
+    name: getNameFromPath(targetPath),
     owner: targetStat.uid,
     size: targetStat.size,
     permissions: modeToOctal(targetStat.mode),
@@ -54,9 +57,9 @@ async function getFile (targetPath: string, targetStat: StatsBase<number>): Prom
 /**
  * Determine if target path maps to directory or file and returns respective data.
  * @param {string} relativePath Path of target directory or file.
- * @return {Promise<QueryFilePathReturnType>} Target directory or file contents and stats.
+ * @return {Promise<GetFilePathReturnType>} Target directory or file contents and stats.
  */
-export async function queryFilePath (relativePath: string): Promise<QueryFilePathReturnType> {
+export async function getFilePath (relativePath: string): Promise<DirectoryOrFileType> {
   const targetPath: string = `/host${relativePath}`
   const targetStat = await fs.stat(targetPath)
 
@@ -65,6 +68,6 @@ export async function queryFilePath (relativePath: string): Promise<QueryFilePat
   } else if (targetStat.isFile()) {
     return await getFile(targetPath, targetStat)
   } else {
-    return []
+    return null
   }
-} // end queryFilePath
+} // end getFilePath
