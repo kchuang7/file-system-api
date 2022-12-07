@@ -1,7 +1,7 @@
 import express, { Express, Request, Response } from 'express'
 import { queryFilePath } from './fileOps.js'
 // types
-import FilesType from '../types/FilesType.js'
+import QueryFilePathReturnType from '../types/QueryFilePathReturnType.js'
 
 const app: Express = express()
 const port: number = 8080
@@ -13,7 +13,7 @@ app.use(express.static('public'))
 
 app.get('/*', (req: Request, res: Response): void => {
   queryFilePath(req.url)
-    .then((f: FilesType) => {
+    .then((f: QueryFilePathReturnType) => {
       res.json(f)
     })
     .catch(console.error)

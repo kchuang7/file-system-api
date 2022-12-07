@@ -2,10 +2,10 @@ import * as fs from 'node:fs/promises'
 import { modeToOctal } from './helper.js'
 // types
 import { Dirent, StatsBase } from 'node:fs'
+import QueryFilePathReturnType from '../types/QueryFilePathReturnType.js'
 import FilesItemType from '../types/FilesItemType'
-import FilesType from '../types/FilesType'
 
-export async function queryFilePath (relativePath: string): Promise<FilesType> {
+export async function queryFilePath (relativePath: string): Promise<QueryFilePathReturnType> {
   const targetPath: string = `/host${relativePath}`
   const targetStat = await fs.stat(targetPath)
 
@@ -28,8 +28,16 @@ export async function queryFilePath (relativePath: string): Promise<FilesType> {
       }
     })
   } else if (targetStat.isFile()) {
-    console.log('i\'m a file')
-    return []
+    const contents = await fs.readFile(targetPath, { encoding: 'utf8' })
+    const stats = await fs.stat(targetPath)
+
+    return {
+      contents,
+      name: relativePath.substring(relativePath.lastIndexOf('/') + 1),
+      owner: stats.uid,
+      size: stats.size,
+      isFile: true
+    }
   } else {
     return []
   }
