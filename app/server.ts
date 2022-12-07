@@ -5,9 +5,6 @@ import QueryFilePathReturnType from '../types/QueryFilePathReturnType.js'
 
 const app: Express = express()
 const port: number = 8080
-// const rootDir = process.env.ROOT_DIR === undefined
-//   ? '/'
-//   : process.env.ROOT_DIR
 
 app.use(express.static('public'))
 
