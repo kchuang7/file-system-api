@@ -55,9 +55,3 @@ To specify file contents, simply change the string following <code>contents=</co
 ### Delete directory or file
 
 <code>curl -X DELETE localhost:8080/new-dir/new-file</code>
-
-## Notes
-
-I spent around 8 hours working on this assignment. A significant portion (~70%) was spent on investigating how to use the node.js file system API to manipulate files and get directory/file information. Once the investigation was more or less complete, implementation and documentation was relatively quicker. Something I took a while investigating but failed to figure out was looking up an owner uid's corresponding system username. As such, owner is currently reported as just the owner uid.
-
-Given more time, I would write unit tests for file CRUD operations with assistance from NPM's mock-fs package. In addition, I would create a SPA for navigating the specified file system. There would be buttons for creating new directories and files, as well as editing and deleting them. Then, I would write Cypress end-to-end tests for all the happy paths.
